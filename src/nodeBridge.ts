@@ -1949,7 +1949,9 @@ class NodeHandlerRegistry {
       const { execSync } = await import('child_process');
 
       const allApps = [
+        'finder',
         'cursor',
+        'antigravity',
         'vscode',
         'vscode-insiders',
         'zed',
@@ -1957,8 +1959,6 @@ class NodeHandlerRegistry {
         'iterm',
         'warp',
         'terminal',
-        'antigravity',
-        'finder',
         'sourcetree',
       ] as const;
 
@@ -1974,12 +1974,15 @@ class NodeHandlerRegistry {
       const macApps: Record<string, string> = {
         iterm: '/Applications/iTerm.app',
         warp: '/Applications/Warp.app',
-        terminal: '/Applications/Utilities/Terminal.app',
-        finder: '/System/Applications/Finder.app',
+        terminal: '/System/Applications/Utilities/Terminal.app',
         sourcetree: '/Applications/Sourcetree.app',
       };
 
       const checkApp = (app: string): boolean => {
+        const isMacOS = process.platform === 'darwin';
+        if (app === 'finder') {
+          return isMacOS;
+        }
         if (cliCommands[app]) {
           try {
             execSync(`which ${cliCommands[app]}`, { stdio: 'ignore' });
