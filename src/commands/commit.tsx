@@ -1,6 +1,6 @@
 import clipboardy from 'clipboardy';
 import { Box, render, Text, useInput } from 'ink';
-import TextInput from 'ink-text-input';
+import TextInput from '../ui/TextInput';
 import type React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import type { Context } from '../context';

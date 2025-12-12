@@ -114,9 +114,9 @@ export type Props = {
   readonly onHistoryReset?: () => void;
 
   /**
-   * Number of columns to wrap text at
+   * Number of columns to wrap text at (optional, defaults to 80)
    */
-  readonly columns: number;
+  readonly columns?: number;
 
   /**
    * Optional callback when an image is pasted
@@ -140,12 +140,15 @@ export type Props = {
    */
   readonly disableCursorMovementForUpDownKeys?: boolean;
 
-  readonly cursorOffset: number;
+  /**
+   * Current cursor offset position (optional, managed internally if not provided)
+   */
+  readonly cursorOffset?: number;
 
   /**
-   * Callback to set the offset of the cursor
+   * Callback to set the offset of the cursor (optional, managed internally if not provided)
    */
-  onChangeCursorOffset: (offset: number) => void;
+  onChangeCursorOffset?: (offset: number) => void;
 
   /**
    * Function to call when `Tab` is pressed for auto-suggestion navigation.
@@ -194,13 +197,13 @@ export default function TextInput({
   onEscape,
   onDoubleEscape,
   onHistoryReset,
-  columns,
+  columns = 80,
   onImagePaste,
   onPaste,
   isDimmed = false,
   disableCursorMovementForUpDownKeys = false,
-  cursorOffset,
-  onChangeCursorOffset,
+  cursorOffset: externalCursorOffset,
+  onChangeCursorOffset: externalOnChangeCursorOffset,
   onTabPress,
   onDelete,
   onExternalEdit,
@@ -208,6 +211,16 @@ export default function TextInput({
   onReverseSearchPrevious,
   onCtrlBBackground,
 }: Props): React.JSX.Element {
+  // Internal cursor state when external control is not provided
+  const [internalCursorOffset, setInternalCursorOffset] = React.useState(
+    originalValue.length,
+  );
+
+  // Use external or internal cursor state
+  const cursorOffset = externalCursorOffset ?? internalCursorOffset;
+  const onChangeCursorOffset =
+    externalOnChangeCursorOffset ?? setInternalCursorOffset;
+
   const { onInput, renderedValue } = useTextInput({
     value: originalValue,
     onChange,
