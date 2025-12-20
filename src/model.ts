@@ -1474,19 +1474,12 @@ export const providers: ProvidersMap = {
     api: 'https://api.moonshot.ai/v1',
     doc: 'https://platform.moonshot.ai/docs/api/chat',
     models: {
-      'kimi-k2-0711-preview': models['kimi-k2'],
       'kimi-k2-0905-preview': models['kimi-k2-0905'],
       'kimi-k2-turbo-preview': models['kimi-k2-turbo-preview'],
       'kimi-k2-thinking': models['kimi-k2-thinking'],
       'kimi-k2-thinking-turbo': models['kimi-k2-thinking-turbo'],
     },
-    createModel(name, provider) {
-      const baseURL = getProviderBaseURL(provider);
-      const apiKey = getProviderApiKey(provider);
-      return createOpenAI(withProxyConfig({ baseURL, apiKey }, provider)).chat(
-        name,
-      );
-    },
+    createModel: defaultModelCreator,
   },
   'moonshotai-cn': {
     id: 'moonshotai-cn',
@@ -1495,26 +1488,12 @@ export const providers: ProvidersMap = {
     api: 'https://api.moonshot.cn/v1',
     doc: 'https://platform.moonshot.cn/docs/api/chat',
     models: {
-      'kimi-k2-0711-preview': models['kimi-k2'],
       'kimi-k2-0905-preview': models['kimi-k2-0905'],
       'kimi-k2-turbo-preview': models['kimi-k2-turbo-preview'],
       'kimi-k2-thinking': models['kimi-k2-thinking'],
       'kimi-k2-thinking-turbo': models['kimi-k2-thinking-turbo'],
     },
-    createModel(name, provider) {
-      const baseURL = getProviderBaseURL(provider);
-      const apiKey = getProviderApiKey(provider);
-      return createOpenAI(
-        withProxyConfig(
-          {
-            baseURL,
-            apiKey,
-            // include usage information in streaming mode why? https://platform.moonshot.cn/docs/guide/migrating-from-openai-to-kimi#stream-模式下的-usage-值
-          },
-          provider,
-        ),
-      ).chat(name);
-    },
+    createModel: defaultModelCreator,
   },
   groq: {
     id: 'groq',
@@ -1903,6 +1882,7 @@ export async function resolveModelWithContext(
         models,
         defaultModelCreator,
         createOpenAI,
+        createOpenAICompatible,
       },
     ],
     memo: providers,
