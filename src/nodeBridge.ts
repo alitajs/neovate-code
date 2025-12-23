@@ -417,15 +417,17 @@ class NodeHandlerRegistry {
         : null;
       const groupedModels = Object.values(
         normalizeProviders(providers, context),
-      ).filter((provider) => provider.hasApiKey).map((provider) => ({
-        provider: provider.name,
-        providerId: provider.id,
-        models: Object.entries(provider.models).map(([modelId, model]) => ({
-          name: (model as ModelData).name,
-          modelId: modelId,
-          value: `${provider.id}/${modelId}`,
-        })),
-      }));
+      )
+        .filter((provider) => provider.hasApiKey)
+        .map((provider) => ({
+          provider: provider.name,
+          providerId: provider.id,
+          models: Object.entries(provider.models).map(([modelId, model]) => ({
+            name: (model as ModelData).name,
+            modelId: modelId,
+            value: `${provider.id}/${modelId}`,
+          })),
+        }));
       return {
         success: true,
         data: {
