@@ -416,8 +416,8 @@ class NodeHandlerRegistry {
           }
         : null;
       const groupedModels = Object.values(
-        providers as Record<string, Provider>,
-      ).map((provider) => ({
+        normalizeProviders(providers, context),
+      ).filter((provider) => provider.hasApiKey).map((provider) => ({
         provider: provider.name,
         providerId: provider.id,
         models: Object.entries(provider.models).map(([modelId, model]) => ({
@@ -2399,6 +2399,7 @@ function normalizeProviders(providers: ProvidersMap, context: Context) {
         doc: provider.doc,
         env: provider.env,
         apiEnv: provider.apiEnv,
+        models: provider.models,
         validEnvs,
         hasApiKey,
       };
